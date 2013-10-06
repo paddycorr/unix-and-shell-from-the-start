@@ -1,0 +1,131 @@
+% small.tex
+\documentclass{beamer}
+\usetheme{default}
+\usepackage{fancybox}
+\title{UNIX and Shell From the Start}
+\author{Paddy Corr\\\textless paddy@netsoc.tcd.ie\textgreater}
+
+\begin{document}
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\begin{frame}{Connecting}
+\texttt{ssh} (secure shell) to one of our servers using:
+
+\begin{itemize}
+    \item PuTTY on windows with login.netsoc.tcd.ie
+    \item using a terminal on unix \$ssh name@login.netsoc.tcd.ie
+\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}{The Basics}
+If you have never worked with a UNIX shell then these next few slides are the slides to get you started.\\We will go through:
+\begin{itemize}
+    \item ls
+    \item cd
+    \item rm
+    \item rmdir
+    \item mkdir
+    \item mv
+    \item cp
+\end{itemize}
+But first; What are we looking at?
+\end{frame}
+
+\begin{frame}{What is this?}
+\begin{center}
+    \fbox{\texttt{paddy@cube:\~\$}}
+\end{center}
+
+This is your prompt. It shows your username (paddy), the hostname (cube), and the directory (\textasciitilde   : tilde means home).
+
+
+\end{frame}
+
+\begin{frame}{ls}
+ls lists the contents of a directory. 
+\begin{center}
+    \fbox{\texttt{\$ ls -al}}
+\end{center}
+in this example the -al are the arguments passed to ls.
+\begin{itemize}
+    \item -a means all and will list hidden files in a directory
+    \item -l means long listing format and will list more info about each file
+\end{itemize}
+output:\\
+\texttt{-rw-r-----   1 paddy paddy   3047 Aug 19 22:51 .bashrc}
+shows the privileges, number of files in a folder, user etc.
+\end{frame}
+
+\begin{frame}{cd}
+\texttt{cd} will change directory.\\If we do \texttt{ls -a} we can se that there are folders called . and ..\\"." means the current directory and ".." means the directory that is above this one.
+to change into a different directory:
+\begin{center}
+    \fbox{\texttt{\$cd ..} or \texttt{\$cd <foldername from ls>}}
+\end{center}
+\end{frame}
+
+\begin{frame}{rm}
+\texttt{rm} removes a file forever.\\
+WARNING: UNIX is not like windows and does not have a recycling bin. If you rm something it will be gone forever.\\
+Usage:
+\begin{center}
+    \fbox{\texttt{\$rm [-rvf] <filename>}}
+\end{center}
+\begin{itemize}
+    \item -r means recursively and will delete all file in a folder and the folder
+    \item -v means verbal and will list files as it deletes
+    \item -f means force
+\end{itemize}
+\end{frame}
+
+\begin{frame}{mkdir}
+Creates one or more new folders
+\begin{center}
+    \fbox{\texttt{\$mkdir <filename> <filename2> <etc>}}
+\end{center}
+\end{frame}
+
+\begin{frame}{mv}
+Moves or renames files or directorys.\\The argument -f can be used to force.\\
+To rename a file or directory:
+\begin{center}
+    \fbox{\texttt{\$mv file1 file2}}
+\end{center}
+\begin{center}
+    \fbox{\texttt{\$mv directory1 directory2}}
+\end{center}
+Move a file to a directory:
+\begin{center}
+    \fbox{\texttt{\$mv file1 Directory}}
+\end{center}
+If the folder you are moving a file to has a file with the same name it will be deleted first. See WARNING about rm.
+\end{frame}
+
+\begin{frame}{cp}
+Copy a file\\
+\begin{center}
+    \fbox{\texttt{\$cp file1 file2}}
+\end{center}
+Copy to a different directory:
+\begin{center}
+    \fbox{\texttt{\$cp file directory}}
+\end{center}
+\end{frame}
+
+\begin{frame}{man}
+\texttt{man} is your friend.\\man is the manual for commands in UNIX.\\If you want to know how to use ls for example then type : 
+\begin{center}
+    \fbox{\texttt{\$man ls}}
+\end{center}
+This will show you a list of arguments for ls along with things like the Author and usage etc.\\
+\texttt{man} should be your first port of call, yes even before Google.
+\end{frame}
+
+\begin{frame}{ls}
+\end{frame}
+
+\end{document}
