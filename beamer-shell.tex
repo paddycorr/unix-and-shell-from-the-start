@@ -2,6 +2,7 @@
 \documentclass{beamer}
 \usetheme{default}
 \usepackage{fancybox}
+\usepackage{fancyvrb}
 \title{UNIX and Shell From the Start}
 \author{Paddy Corr\\\textless paddy@netsoc.tcd.ie\textgreater}
 
@@ -122,10 +123,256 @@ Copy to a different directory:
     \fbox{\texttt{\$man ls}}
 \end{center}
 This will show you a list of arguments for ls along with things like the Author and usage etc.\\
-\texttt{man} should be your first port of call, yes even before Google.
+\texttt{man} should be your first port of call. Yes, even before Google.
 \end{frame}
 
-\begin{frame}{ls}
+\begin{frame}{history}
+\texttt{history} will output the previous commands executed.\\
+With this we can do things like repeat command 157 by typing \fbox{\texttt{\$!157}}\\
+The exclamation point here is an original feature of c shell and existed before you could count on having arrow keys on your terminal. There are many more uses of !:
+\begin{itemize}
+    \item \fbox{\texttt{!!}} - repeats last command
+    \item \fbox{\texttt{!python}} - repeats last command that starts with a keyword
+    \item \fbox{\texttt{!?grep}} - repeats last command that contains a keyword
+    \item \fbox{\texttt{\textasciicircum python\textasciicircum vim}} - replaces word in previous command and inputs command again
+\end{itemize}
+
+\end{frame}
+\begin{frame}[fragile]{autocompletion}
+After typing a letter or more of a command or directory/file we can press tab once to complete the command if there is only one possible auto-completion.\\Otherwise if we press tab twice the output will be all the possible completions of the command.\\After pressing tab twice: 
+\begin{verbatim}paddy@cube:~$ wi
+widget            winpopup-send     wish              wish-default
+winicontoppm      wipe              wish8.4           withsctp
+winpopup-install  wireshark         wish8.5
+\end{verbatim}
+
+\end{frame}
+\begin{frame}{cal}
+Print calender for certain month and year\\
+\begin{center}
+    \fbox{\texttt{\$cal <month> <year>}}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{wc}
+Word Count counts the newlines, words and bytes in a file. We will use this in examples later.\\
+\begin{center}
+    \fbox{\texttt{\$wc [-wcl]} \textless filename\textgreater}
+\end{center}
+Where:
+\begin{itemize}
+    \item w - words
+    \item l - lines
+    \item c - bytes
+\end{itemize}
+\end{frame}
+
+\begin{frame}{whoami}
+    Print userid to output.
+\end{frame}
+
+\begin{frame}{which}
+Follows PATH to find executables that have the same name as the arguments.\\Used to loacate programs such as:
+\begin{center}
+    \fbox{\texttt{\$which bash}}
+\end{center}
+Will return something like \texttt{\textbackslash bin\textbackslash bash}
+\end{frame}
+
+\begin{frame}{alias}
+Set a variable or command to be the same command as something else.\\Eg to set ls to always print ls -a
+\begin{center}
+    \fbox{\texttt{\$alias "ls"="ls -a"}}
+\end{center}
+and to unalias something:
+\begin{center}
+    \fbox{\texttt{\$unalias ls}}
+\end{center}
+\end{frame}
+
+\begin{frame}{tar}
+Compress and zip files together.\\ Main uses:
+\begin{itemize}
+    \item compress\\\fbox{\texttt{\$tar -cvf <folder> <output file>}}
+    \item decompress\\\fbox{\texttt{\$tar -xvf <compressed file> <output folder>}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ps}
+List processes currently running on the system.
+\begin{center}
+    \fbox{\texttt{\$ps aux}} prints all processes currently running
+\end{center}
+\end{frame}
+
+\begin{frame}{Let's start}
+    Now that we know a lot of the basic UNIX commands and how to use them we can use them together to do really cool and helpful things.\\To do this we will use:
+    \begin{itemize}
+        \item piping - \textbar
+        \item redirection of stdin - \textless
+        \item redirection of stdout - \textgreater
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{redirection of stdout}
+    Redirection of stdout is used to take the out put of a command and do some thing with it.\\ This is the begining of your scripting.\\when we output to a file the output file will overwrite any file with that name that already exists.
+    \begin{itemize} 
+        \item \fbox{\texttt{grep searchword file1 \textgreater\  file2}}
+        \item \fbox{\texttt{grep searchword file1 \textgreater\textgreater\  file2}} will append to a file if it exists
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{redirection of stdin}
+    Redirection of stdin is used for example to input a file to something like grep or cat.\\ eg: 
+    \begin{itemize} 
+        \item \fbox{\texttt{grep searchword \textless\  file}}
+        \item \fbox{cat \textless\  file \textless\  grep searchword \textless\  file}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{piping}
+    \begin{itemize} 
+        \item \fbox{\texttt{find .* -name *.py | xargs wc -l}}
+        \item \fbox{\texttt{ps -ef | grep emacs | grep -v grep | wc -l }}
+        \item \fbox{\texttt{ls /home | sort | head -n 5}}
+    \end{itemize}
+    Piping will take the output directly from a program and use this output to do something else.\\In the case of xargs shown the program xargs takes each line of output piped to it and does something with that output. In this case counding the lines in each file given.
+\end{frame}
+
+\begin{frame}[fragile]{First Script}
+Lets take the previous \texttt{find} command and put it in a file. Open a program such as nano/vim (maybe nano for starting) and type the following into the file:
+
+    \begin{verbatim}
+
+    #!/bin/bash
+    clear
+    echo "hello $user"
+    echo "calendar"
+    echo "today is "; date
+    cal
+    exit 0
+    \end{verbatim}
+    And save it. Try running this file now by typeing \texttt{./<name>.sh}\\
+    What happens?
+
+\end{frame}
+
+\begin{frame}{Permissions}
+    Your file will not have executed because you do not have permissions to execute that file. To fix this we use \texttt{chmod}\\
+    \fbox{\texttt{chmod u+x scriptname.sh}}
+\end{frame}
+
+\begin{frame}[fragile]{conditionals}
+    We use \&\& for AND
+    and || for exclusive OR (XOR)
+    \begin{verbatim}
+    $ true && echo "Hi $USER"
+      Hi paddy
+    $ false && echo "Hi $USER"
+    $ true || echo "Hi $USER"
+    $ false || echo "Hi $USER"
+      Hi paddy
+    \end{verbatim}    
+
+\end{frame}
+
+\begin{frame}[fragile]{backticks}
+    enclose a string in backticks and that string will be executed as a command. Eg in a script:
+    \begin{verbatim}
+        echo "the date is `date`"
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{special variables}
+    \begin{verbatim}
+    $RANDOM: random integer
+    $$: current PID
+    $?: exit status of last process exited
+    $!: PID of most recent child process
+    $@: argv
+    $0…$9: 0th to 9th argument
+    $#: number of arguments
+    $SHELL: current shell
+    $USER: current user
+    $HOME: Current users home directory-thanks to Ben xox
+
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{If and exits}
+    In the script that we have written we had at the end "exit 0" this means that the scripts exits nicely. If this was an "exit 1" then the script would not have exited nicely. We can use this with if statements:\\
+    \begin{verbatim}
+    $ if (exit 0); then echo "cool"; fi
+      yay
+    $ if (exit 1); then echo "cool"; fi
+    \end{verbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]{While}
+A while loop in a shell script
+    \begin{verbatim}
+        #!/bin/bash 
+        COUNTER=0
+        while [  $COUNTER -lt 10 ]; do
+         echo The counter is $COUNTER
+         let COUNTER=COUNTER+1 
+        done
+    \end{verbatim}
+    
+\end{frame}
+
+\begin{frame}[fragile]{for}
+    We can use for to iterate over arguments.\\
+    eg:
+    \begin{verbatim}
+    $ for i in $(ls); do
+    > echo $i
+    > du -sh $i
+    > done
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{until}
+    \begin{verbatim}
+        #!/bin/bash 
+        COUNTER=20
+        until [  $COUNTER -lt 10 ]; do
+         echo COUNTER $COUNTER
+         let COUNTER-=1
+        done
+    \end{verbatim}
+\end{frame}
+\begin{frame}[fragile]{functions}
+    functions have the syntax: function name { code }
+    \begin{verbatim}
+    #!/bin/bash 
+       function quit {
+           exit
+       }
+       function hello {
+           echo Hello!
+       }
+       hello
+       quit
+       echo foo 
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{functions with params}
+    \begin{verbatim}
+    #!/bin/bash 
+       function quit {
+           exit
+       }
+       function a {
+           echo $1
+       }
+       a hello
+       a world
+       echo foo 
+    \end{verbatim}
 \end{frame}
 
 \end{document}
