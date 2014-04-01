@@ -1,4 +1,4 @@
 unix-and-shell-from-the-start
 =============================
 
-UNIX and Shell From the Start
+Download the pdf (i know :/) or download the .tex to work on your own slides.
